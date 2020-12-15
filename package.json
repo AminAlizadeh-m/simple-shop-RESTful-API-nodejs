@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/AminAlizadeh-m/simple-shop-RESTful-API-nodejs/issues"
   },
-  "homepage": "https://github.com/AminAlizadeh-m/simple-shop-RESTful-API-nodejs#readme"
+  "homepage": "https://github.com/AminAlizadeh-m/simple-shop-RESTful-API-nodejs#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
