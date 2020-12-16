@@ -1,11 +1,10 @@
 const express = require('express');
 const app = express();
 
-// Add a midleware
-app.use( (req, res, next) => {
-    res.status(200).json({
-        message: 'Welcome to my server'
-    });
-});
+const productsRoutes = require('./api/products/products');
+const ordersRouter = require('./api/products/orders');
+
+app.use('/products', productsRoutes);
+app.use('/orders', ordersRouter);
 
 module.exports = app;
