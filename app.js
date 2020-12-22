@@ -1,11 +1,31 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
 
 const productsRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
 
 app.use(morgan('dev'));
+app.use(bodyParser({
+    extended: false
+})); // Deprecated in new verson of nodejs
+app.use(bodyParser.json()); // Parse body as json
+
+// CROS
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    if (req.method === "OPTIONS") {
+        res.header('Access-Control-Allow-Methods', 'PUT, PATCH, POST, GET, DELETE');
+        res.status(200).json({});
+    }
+
+    next();
+})
 
 app.use('/products', productsRoutes);
 app.use('/orders', ordersRoutes);
@@ -16,7 +36,7 @@ app.use((req, res, next) => {
     next(error);
 });
 
-app.use((error, req, res, next) =>{
+app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
         error: {
