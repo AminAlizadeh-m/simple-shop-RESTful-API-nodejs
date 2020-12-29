@@ -2,9 +2,15 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const productsRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
+
+mongoose.connect('mongodb://' + process.env.MONGO_ADDRESS + ':' + process.env.MONGO_PORT, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 app.use(morgan('dev'));
 app.use(bodyParser({
