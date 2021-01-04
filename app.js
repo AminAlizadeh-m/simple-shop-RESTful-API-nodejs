@@ -7,10 +7,13 @@ const mongoose = require('mongoose');
 const productsRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
 
-mongoose.connect('mongodb://' + process.env.MONGO_ADDRESS + ':' + process.env.MONGO_PORT, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+mongoose.connect('mongodb://' +
+    process.env.MONGO_ADDRESS + ':' +
+    process.env.MONGO_PORT + '/' +
+    process.env.MONGO_DB_NAME, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    });
 
 app.use(morgan('dev'));
 app.use(bodyParser({
