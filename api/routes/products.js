@@ -6,11 +6,23 @@ const Product = require('../models/product');
 
 router.get('/', (req, res, next) => {
     Product.find()
+        .select('name price _Wid')
         .exec()
-        .then(doc => {
-            console.log(doc);
-            if (doc.length > 0) {
-                res.status(200).json(doc);
+        .then(docs => {
+            if (docs.length > 0) {
+                const response = {
+                    count: docs.length,
+                    products: docs.map(doc => {
+                        return {
+                            ...doc._doc,
+                            request: {
+                                type: 'GET',
+                                url: `${process.env.URL_SERVER}:${process.env.PORT_SERVER}/products/${doc._id}`
+                            }
+                        };
+                    })
+                }
+                res.status(200).json(response);
             } else {
                 res.status(404).json({
                     message: 'No entrise found'
@@ -18,7 +30,6 @@ router.get('/', (req, res, next) => {
             }
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({
                 error: error
             });
@@ -32,13 +43,19 @@ router.post('/', (req, res, next) => {
         price: req.body.price
     });
     product.save().then(result => {
-        console.log(result);
         res.status(200).json({
-            message: 'Handling POST requset to /products',
-            createdProduct: result
+            message: 'Created product successfully',
+            createdProduct: {
+                name: result.name,
+                price: result.price,
+                id: result._id,
+                requset: {
+                    type: 'POST',
+                    url: `${process.env.URL_SERVER}:${process.env.PORT_SERVER}/products/${doc._id}`
+                }
+            }
         });
     }).catch(error => {
-        console.log(error);
         res.status(500).json({
             error: error
         })
@@ -48,11 +65,17 @@ router.post('/', (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
+        .select('name price _id')
         .exec()
         .then(doc => {
-            console.log(doc);
             if (doc) {
-                res.status(200).json(doc);
+                res.status(200).json({
+                    product: doc,
+                    request: {
+                        type: 'GET',
+                        url: `${process.env.URL_SERVER}:${process.env.PORT_SERVER}/products/${doc._id}`
+                    }
+                });
             } else {
                 res.status(404).json({
                     message: 'No valid entry found for provided ID'
@@ -60,7 +83,6 @@ router.get('/:productId', (req, res, next) => {
             }
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({
                 error: error
             });
@@ -76,13 +98,15 @@ router.patch('/:productId', (req, res, next) => {
     Product.update({_id: id}, { $set: updateOps } )
         .exec()
         .then(result => {
-            console.log(result);
             res.status(200).json({
-                message: result
+                message: "Product updated",
+                request: {
+                    type: 'PATCH',
+                    url: `${process.env.URL_SERVER}:${process.env.PORT_SERVER}/products/${id}`
+                }
             });
         })
         .catch(error => {
-            console.log(error);
             res.status(500).json({
                 error: error
             });
@@ -91,24 +115,17 @@ router.patch('/:productId', (req, res, next) => {
 
 router.delete('/:productId', (req, res, next) => {
     const id = req.params.productId;
-    // Product.findByIdAndDelete(id)
-    //     .exec()
-    //     .then(doc => {
-    //         res.status(200).json({
-    //             message: 'Deleted' + doc
-    //         });
-    //     })
-    //     .catch(error => {
-    //         res.status(400).json({
-    //             message: 'Error message'
-    //         });
-    //     });
+
     Product.remove({_id: id})
         .exec()
         .then(result => {
             console.log(result);
             res.status(200).json({
-                message: result
+                message: "Product deleted",
+                request: {
+                    type: 'DELETE',
+                    url: `${process.env.URL_SERVER}:${process.env.PORT_SERVER}/products/${id}`
+                }
             });
         })
         .catch(error => {

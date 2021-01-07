@@ -16,9 +16,6 @@ mongoose.connect('mongodb://' +
     });
 
 app.use(morgan('dev'));
-app.use(bodyParser({
-    extended: false
-})); // Deprecated in new verson of nodejs
 app.use(bodyParser.json()); // Parse body as json
 
 // CROS
