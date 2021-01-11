@@ -16,6 +16,7 @@ mongoose.connect('mongodb://' +
     });
 
 app.use(morgan('dev'));
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json()); // Parse body as json
 
 // CROS
