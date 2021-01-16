@@ -7,8 +7,6 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 router.post('/signup', (req, res, next) => {
-    console.log(req.body);
-
     User.find({email: req.body.email})
         .exec()
         .then(user => {
@@ -17,7 +15,6 @@ router.post('/signup', (req, res, next) => {
                     message: 'Mail exists'
                 });
             } else {
-                console.log(req.body.password);
                 bcrypt.hash(req.body.password, 10, (err, hashedPassword) => {
                     if (err) {
                         console.log(err);
