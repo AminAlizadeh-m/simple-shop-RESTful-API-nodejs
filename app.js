@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const productsRoutes = require('./api/routes/products');
 const ordersRoutes = require('./api/routes/orders');
+const userRouter = require('./api/routes/user');
 
 mongoose.connect('mongodb://' +
     process.env.MONGO_ADDRESS + ':' +
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 app.use('/products', productsRoutes);
 app.use('/orders', ordersRoutes);
+app.use('/user', userRouter);
 
 app.use((req, res, next) => {
     const error = new Error('Not found');
