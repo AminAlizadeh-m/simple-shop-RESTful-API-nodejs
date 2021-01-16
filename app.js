@@ -33,7 +33,7 @@ app.use((req, res, next) => {
     }
 
     next();
-})
+});
 
 app.use('/products', productsRoutes);
 app.use('/orders', ordersRoutes);
